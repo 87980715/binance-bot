@@ -19,7 +19,11 @@ simple analyzing bot, checking coin-price-variations for a specified observingPe
 * implement usage of authorized binance api for order handling 
 
 # usage requirements 
-* installed jre (version 8+)
+* installed `jre (version 8+)`
+* `maven` (for build)
+
+# build
+* `mvn clean install`
 
 # usage
 
