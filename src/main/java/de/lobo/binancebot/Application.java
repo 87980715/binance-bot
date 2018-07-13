@@ -32,8 +32,8 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        binanceComposingService.analyzeCoinPriceForPeriodWithInterval(symbol);
-       OrderResponse resp =  binanceAuthClient.addOrder("BTCUSDT", "SELL", "LIMIT", "GTC", "0.002", "6444.44");
-       log.info("binance-response: {}", resp);
+        binanceComposingService.analyzeCoinPriceForPeriodWithInterval(symbol);
+//       OrderResponse resp =  binanceAuthClient.addOrder("BTCUSDT", "SELL", "LIMIT", "GTC", "0.002", "6444.44");
+//       log.info("binance-response: {}", resp);
     }
 }
