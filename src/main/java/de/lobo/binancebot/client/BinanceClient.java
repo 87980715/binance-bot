@@ -14,4 +14,6 @@ public interface BinanceClient {
     CoinPrice getCoinPrice(@Param("symbol") String symbol);
 
 
+
+
 }

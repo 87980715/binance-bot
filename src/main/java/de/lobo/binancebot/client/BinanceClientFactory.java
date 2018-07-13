@@ -1,8 +1,10 @@
 package de.lobo.binancebot.client;
 
+import de.lobo.binancebot.client.auth.SigningRequestInterceptor;
 import de.lobo.binancebot.config.BinanceConfig;
 import feign.Feign;
 import feign.Logger;
+import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.slf4j.Slf4jLogger;
@@ -16,6 +18,9 @@ public class BinanceClientFactory {
     @Autowired
     private BinanceConfig binanceConfig;
 
+    @Autowired
+    private SigningRequestInterceptor signingRequestInterceptor;
+
     @Bean
     public BinanceClient createBinanceClient() {
         return Feign
@@ -23,7 +28,19 @@ public class BinanceClientFactory {
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .logger(new Slf4jLogger())
-                .logLevel(Logger.Level.FULL)
+                .logLevel(Logger.Level.BASIC)
                 .target(BinanceClient.class, binanceConfig.getBaseUrl());
+    }
+
+    @Bean
+    public BinanceAuthClient createBinanceAuthClient() {
+        return Feign
+                .builder()
+                .encoder(new FormEncoder())
+                .decoder(new JacksonDecoder())
+                .requestInterceptor(signingRequestInterceptor)
+                .logger(new Slf4jLogger())
+                .logLevel(Logger.Level.FULL)
+                .target(BinanceAuthClient.class, binanceConfig.getBaseUrl());
     }
 }

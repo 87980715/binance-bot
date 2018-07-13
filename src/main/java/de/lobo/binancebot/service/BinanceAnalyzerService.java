@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 @Service
 public class BinanceAnalyzerService {
     private final Logger log = LoggerFactory.getLogger(BinanceAnalyzerService.class);
-    private final static DecimalFormat df = new DecimalFormat("0.0000");
+    private final static DecimalFormat df = new DecimalFormat("##0.0000");
 
     @Value("${alertMargin}")
     private Double alertMargin;
