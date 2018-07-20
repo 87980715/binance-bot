@@ -1,0 +1,36 @@
+Configuration:
+  status: info
+  name: binance-bot-log4js-config
+  properties:
+    property:
+      name: filename
+      value: binance-bot.log
+  thresholdFilter:
+    level: info
+  appenders:
+    Console:
+      name: STDOUT
+      PatternLayout:
+        Pattern: "%d{${LOG_DATEFORMAT_PATTERN:-HH:mm:ss.SSS}} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=red blink, ERROR=red, WARN=yellow bold, INFO=green, DEBUG=green bold, TRACE=blue} [%t] %style{%-40.40C{1.}}{cyan} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+    File:
+      name: File
+      fileName: ${filename}
+      PatternLayout:
+        Pattern: "%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} [%t] %C{1.} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+
+  Loggers:
+    logger:
+      - name: de.lobo.binancebot
+        level: debug
+        additivity: true
+        AppenderRef:
+          ref: STDOUT
+      - name: de.lobo.binancebot
+        level: info
+        additivity: true
+        AppenderRef:
+          ref: File
+    Root:
+      level: debug
+      AppenderRef:
+        ref: STDOUT
