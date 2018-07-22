@@ -34,8 +34,11 @@ public class ComposerService {
     @Value("${quantity}")
     private double quantity;
 
-    public void logCoinPriceMovements(String symbol) {
-        log.info("price-movement for symbol {}: {}", symbol, fetcherService.fetchCoinPrice(symbol));
+    public void logCoinPriceMovements(String symbol) throws InterruptedException {
+        while (true) {
+            log.info("price-movement for symbol {}: {}", symbol, fetcherService.fetchCoinPrice(symbol));
+            Thread.sleep(2000L);
+        }
     }
 
     public void tradeBasedOnMacd(String symbol, String interval) throws InterruptedException {
