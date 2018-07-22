@@ -1,9 +1,13 @@
 package de.lobo.binancebot.client;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.lobo.binancebot.client.auth.SigningRequestInterceptor;
 import de.lobo.binancebot.config.BinanceConfig;
 import feign.Feign;
 import feign.Logger;
+import feign.RetryableException;
+import feign.Retryer;
 import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -23,12 +27,14 @@ public class BinanceClientFactory {
 
     @Bean
     public BinanceClient createBinanceClient() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.UNWRAP_ROOT_VALUE, true);
         return Feign
                 .builder()
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .logger(new Slf4jLogger())
-                .logLevel(Logger.Level.BASIC)
+                .logLevel(Logger.Level.FULL)
                 .target(BinanceClient.class, binanceConfig.getBaseUrl());
     }
 
@@ -38,9 +44,30 @@ public class BinanceClientFactory {
                 .builder()
                 .encoder(new FormEncoder())
                 .decoder(new JacksonDecoder())
+                .retryer(noRetry())
                 .requestInterceptor(signingRequestInterceptor)
                 .logger(new Slf4jLogger())
                 .logLevel(Logger.Level.FULL)
                 .target(BinanceAuthClient.class, binanceConfig.getBaseUrl());
+    }
+
+    @Bean
+    public Retryer noRetry() {
+        return new Retryer() {
+
+            @Override
+            public void continueOrPropagate(RetryableException e) {
+                throw e;
+            }
+
+            @Override
+            public Retryer clone() {
+                return this;
+            }
+        };
+    }
+
+    public void bla() {
+
     }
 }

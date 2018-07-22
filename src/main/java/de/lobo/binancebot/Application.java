@@ -1,9 +1,8 @@
 package de.lobo.binancebot;
 
 import de.lobo.binancebot.client.BinanceAuthClient;
-import de.lobo.binancebot.client.model.OrderResponse;
-import de.lobo.binancebot.service.BinanceComposingService;
-import feign.Response;
+import de.lobo.binancebot.service.ComposerService;
+import de.lobo.binancebot.service.MacdService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.util.StringUtils;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -20,11 +20,17 @@ public class Application implements CommandLineRunner {
     @Value("${symbol:BTCUSDT}")
     private String symbol;
 
+    @Value("${operation.mode}")
+    private String mode;
+
     @Autowired
-    private BinanceComposingService binanceComposingService;
+    private ComposerService binanceComposingService;
 
     @Autowired
     private BinanceAuthClient binanceAuthClient;
+
+    @Autowired
+    private MacdService macdService;
 
     public static void main (String [] args) {
         SpringApplication.run(Application.class);
@@ -32,8 +38,14 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        binanceComposingService.analyzeCoinPriceForPeriodWithInterval(symbol);
-//       OrderResponse resp =  binanceAuthClient.addOrder("BTCUSDT", "SELL", "LIMIT", "GTC", "0.002", "6444.44");
-//       log.info("binance-response: {}", resp);
+        if (StringUtils.isEmpty(mode)) {
+            log.info("starting analyze {} - logging only", symbol);
+            binanceComposingService.logCoinPriceMovements(symbol);
+        }
+
+        if (mode.equalsIgnoreCase("trademacd")) {
+            log.info("starting trading {} based on MACD", symbol);
+            binanceComposingService.tradeBasedOnMacd("XLMUSDT", "5m");
+        }
     }
 }

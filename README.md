@@ -1,22 +1,16 @@
 # binance-bot
-simple analyzing bot, checking coin-price-variations for a specified observingPeriod; querying binance-api for data
+simple binance bot, checking coin-price-movements or trading based on TA (MACD) 
 
 # status
 * in dev
 * no persistent storage, yet
-* calcs based on values, fetched in `observingPeriodInMinutes` time range
-* calcs & values will be reset after `observingPeriodInMinutes`
-* no order handling yet
-* no authorization on binance api access required, yet
-* currently only logs variation results to console
-  * as info, if margin not exceeded
-  * as warn, if margin exceeded
+* offers:
+  * simple logging of prices
+  * trading based on TA (MACD)
+  * market orders only yet
 
 # plannings
-* add simple order handlings, based on alerts
-* introduce persistent storage for longer time framed observations
-* notification-mails (low prio)
-* implement usage of authorized binance api for order handling 
+* introduce persistent storage (h2) 
 
 # usage requirements 
 * installed `java-jdk (version 8+)`
@@ -27,15 +21,18 @@ simple analyzing bot, checking coin-price-variations for a specified observingPe
 
 # usage
 
-* minimal (defaults to BTC/USDT)
+* minimal (defaults to BTC/USDT) - only logging
 
     `java -jar binance-bot-<version>.jar`
 
-* define symbol (scheme: BTCUSDT; ETHUSDT...)
+* define symbol
 
-    `java -Dsymbol=LTCUSDT -jar binance-bot-<version>.jar`
+    `java -Dsymbol=LTCUSDT -Dmode=trademacd -Dquantity -jar binance-bot-<version>.jar`
 
-* you may specify currently few more options, same like symbol (s.a.)
-  * `observingPeriodInMinutes` (default: 1h)
-  * `fetchIntervalInSeconds` (default: 2s)
-  * `alertMargin` (default: 0.02 = 2%)
+* you may specify currently few more options, for trading you need to provide your respective binance api keys
+  * `symbol` (eg. BTCUSDT, ETHUSDT) (currently only USDT pairings supported)
+  * `quantity` #(coins) (required for trade)
+  * `apiKey` only required for trade mode
+  * `secretKey` only required for trade mode
+  * `mode` default: `<empty>`, trademacd 
+  * `recvWindow` validity length for a order request to binance

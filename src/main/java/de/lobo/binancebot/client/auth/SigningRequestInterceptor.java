@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 public class SigningRequestInterceptor implements RequestInterceptor {
     private final static Logger log = LoggerFactory.getLogger(SigningRequestInterceptor.class);
 
-    @Value("${binance.apiKey}")
+    @Value("${apiKey}")
     private String apiKey;
 
-    @Value("${binance.secretKey}")
+    @Value("${secretKey}")
     private String secret;
 
-    @Value("${binance.recvWindow}")
+    @Value("${recvWindow}")
     private long recvWindow;
 
     @Override

@@ -15,6 +15,4 @@ public interface BinanceAuthClient {
                            @Param("timeInForce") String timeInForce,
                            @Param("quantity") String quantity,
                            @Param("price") String price);
-
-
 }
